@@ -1,7 +1,8 @@
 Version 0.9 (January 2014)
---------------------------
 
-   * ~1800 changes, numerous bugfixes
+by liigo, 2014.
+
+   * ~8001 changes, numerous bugfixes
 
    * Language
       * The `float` type has been removed. Use `f32` or `f64` instead.
