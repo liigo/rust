@@ -17,7 +17,7 @@ use std::io;
 use std::libc::{c_int, c_void};
 use std::libc;
 use std::mem;
-use std::os::win32::{as_utf16_p, fill_utf16_buf_and_decode};
+use std::os::win32::as_utf16_p;
 use std::ptr;
 use std::rt::rtio;
 use std::str;
@@ -423,6 +423,11 @@ pub fn readlink(p: &CString) -> IoResult<Path> {
     if handle as int == libc::INVALID_HANDLE_VALUE as int {
         return Err(super::last_error())
     }
+
+    // FIXME: GetFinalPathNameByHandleW does not support Windows XP. (liigo)
+    Err(super::unimpl())
+
+    /*
     // Specify (sz - 1) because the documentation states that it's the size
     // without the null pointer
     let ret = fill_utf16_buf_and_decode(|buf, sz| unsafe {
@@ -438,14 +443,21 @@ pub fn readlink(p: &CString) -> IoResult<Path> {
     };
     assert!(unsafe { libc::CloseHandle(handle) } != 0);
     return ret;
+    */
 }
 
+#[allow(unused_variable)]
 pub fn symlink(src: &CString, dst: &CString) -> IoResult<()> {
+    // FIXME: CreateSymbolicLinkW does not support Windows XP. (liigo)
+    Err(super::unimpl())
+
+    /*
     super::mkerr_winbool(as_utf16_p(src.as_str().unwrap(), |src| {
         as_utf16_p(dst.as_str().unwrap(), |dst| {
             unsafe { libc::CreateSymbolicLinkW(dst, src, 0) }
         }) as libc::BOOL
     }))
+    */
 }
 
 pub fn link(src: &CString, dst: &CString) -> IoResult<()> {
