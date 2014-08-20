@@ -115,7 +115,8 @@ impl TcpStream {
         let SocketAddr { ip, port } = addr;
         let addr = rtio::SocketAddr { ip: super::to_rtio(ip), port: port };
         LocalIo::maybe_raise(|io| {
-            io.tcp_connect(addr, Some(timeout.num_milliseconds() as u64)).map(TcpStream::new)
+            io.tcp_connect(addr, timeout.num_milliseconds().map(|ms| ms as u64))
+            .map(TcpStream::new)
         }).map_err(IoError::from_rtio_error)
     }
 

@@ -74,7 +74,8 @@ impl UnixStream {
         }
 
         LocalIo::maybe_raise(|io| {
-            let s = io.unix_connect(&path.to_c_str(), Some(timeout.num_milliseconds() as u64));
+            let s = io.unix_connect(&path.to_c_str(),
+                    timeout.num_milliseconds().map(|ms| ms as u64));
             s.map(|p| UnixStream { obj: p })
         }).map_err(IoError::from_rtio_error)
     }

@@ -25,6 +25,7 @@ use io::{IoResult, IoError};
 use kinds::Send;
 use boxed::Box;
 use rt::rtio::{IoFactory, LocalIo, RtioTimer, Callback};
+use option::Some;
 
 /// A synchronous timer object
 ///
@@ -225,9 +226,10 @@ impl Callback for TimerCallback {
 }
 
 fn in_ms_u64(d: Duration) -> u64 {
-    let ms = d.num_milliseconds();
-    if ms < 0 { return 0 };
-    return ms as u64;
+    match d.num_milliseconds() {
+        Some(ms) if ms >= 0 => ms as u64,
+        _ => 0
+    }
 }
 
 #[cfg(test)]
